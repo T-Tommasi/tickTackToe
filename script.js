@@ -8,52 +8,99 @@ function tiktaktoeGame (playerInput) {
 
     //when indicating the gameboard locations the first number indicates the row, while the second is the column
 
-    return function addPlayerSigns() {
-        playerInput.addEventListener('click',(event) => {
-            let coordinatesRaw = event.target.dataset.coordinates;
-            let coordinatesArray = coordinatesRaw.split('');
-
-        function appendResultToGameboard() {
-                let row = parseInt(coordinatesArray[0]);
-                let column = parseInt(coordinatesArray[1]);
-                gameBoard[row][column] = 'X';
-
-        function findEmptyCells() {
-            for (let i=0; i < 3; i++){
-                for (let y=0; y<3; y++) {
-                    if (gameBoard[i][y] === '') {
-                        let emptyCells = [i,y]
-                        return emptyCells
-                    }
+    function randomMove() {
+        for (x=0;x<3;x++) {
+            for (y=0;y<3;y++) {
+                if(gameBoard[x][y] === '') {
+                    gameBoard[x][y] = 'O';
                 }
             }
         }
+    };
 
-        function computerMove() {
-                    let randomness = Math.floor(Math.random()*10);
-                    let strategicChoices = [
-                        [1,1],
-                        [0,1],
-                        [0,2],
-                        [2,0],
-                        [2,2],
-                    ];
-                    if (turn == 0) {
-                        for (let available of strategicChoices) {
-                            if (gameBoard[available[0]][available[1]] === '') {
-                                gameBoard[available[0]][available[1]] = 'O';
-                                turn++
-                                break
-                            }
-                        }
-                    } else {
-                        findEmptyCells();
-                        gameBoard[emptyCells[0]][emptyCells[1]] = 'O';
-                        turn++;
-                        break
-                    }
-                };
+    function addComputerSigns() {
+        const STRATEGICMOVES = [
+            [1,1],
+            [0,0],
+            [0,2],
+            [2,0],
+            [2,2],
+        ]
+        let strategicAvaible = false;
+
+        for (let move of STRATEGICMOVES) {
+            if (gameBoard[move[0]][move[1]] == '');
+            strategicAvaible = true;
+            break
+        }
+
+        if (strategicAvaible) {
+            for(let move of STRATEGICMOVES) {
+                if (gameBoard[move[0]][move[1]] === '') {
+                    gameBoard[move[0]][move[1]] = 'O';
+                    turn++;
+                    break
+                }
             }
+        } else {
+            randomMove();
+            turn++;
+            return
+        }
+    };
+
+    function retrievePlayerChoice(origin) {
+        origin.addEventListener('click', () => {
+            let playerChoice = this.target.dataset;
+            addComputerSigns();
+            let coordinates=playerChoice.split('');
+            gameBoard[coordinates[0]][coordinates[1]] = 'X';
+            turn++;
+            return;
         })
+    };
+
+    function findOccupiedCells() {
+        let occupiedCellsPlayer = []
+        let occupiedCellsAi = []
+        for (x=0;x<3;x++) {
+            for (y=0;y<3;y++) {
+                if (gameBoard[x][y] === 'X') {
+                    occupiedCellsPlayer.push([x,y])
+                } else if (gameBoard[x][y] === 'O') {
+                    occupiedCellsAi.push([x,y])
+                }
+            }
+        }
+        return {occupiedCellsAi, occupiedCellsPlayer}
+    };
+    
+    function winCondition() {
+        const winningLanes = [
+            [[0, 0], [0, 1], [0, 2]], // Top row
+            [[1, 0], [1, 1], [1, 2]], // Middle row
+            [[2, 0], [2, 1], [2, 2]], // Bottom row
+            [[0, 0], [1, 0], [2, 0]], // Left column
+            [[0, 1], [1, 1], [2, 1]], // Middle column
+            [[0, 2], [1, 2], [2, 2]], // Right column
+            [[0, 0], [1, 1], [2, 2]], // Diagonal
+            [[0, 2], [1, 1], [2, 0]]  // Reverse diagonal
+        ]
+        let occupiedCells=findOccupiedCells()
+        let playerMoves = occupiedCells.occupiedCellsPlayer
+        let aiMoves = occupiedCells.occupiedCellsAi
+
+        for (let lane of winningLanes) {
+            let winningLanePlayer = lane.every(coord => playerMoves.some(cell => coord[0] === cell[0] && coord[1] === cell[1]))
+            let winningLaneAi = lane.every(coord => aiMoves.some(cell => coord[0] === cell[0] && coord[1] === cell[1]))
+
+            if (winningLanePlayer) {
+                return playerWin = true
+            } else if (winningLaneAi) {
+                return aiWin = true
+            }
+        }
+
+        return false
     }
-}
+};
