@@ -9,9 +9,15 @@
 </head>
 <body>
     <head>
-        <div class="container">
-            <div class="gameBoard"></div>
-            <div class="bottomMenu"></div>
+        <div class="container flex">
+            <div class="gameBoard grid"></div>
+            <div class="bottomMenu">
+                <div class="turnCounter"></div>
+                <div class="restartGame">
+                    <button id="restart"></button>
+                </div>
+                <dialog class="winnerAnnounce"></dialog>
+            </div>
         </div>
     </head>
 </body>
