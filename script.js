@@ -1,4 +1,4 @@
-function tiktaktoeGame (playerInput) {
+function tiktaktoeGame () {
     let gameBoard = [
         ['','',''],
         ['','',''],
@@ -52,9 +52,13 @@ function tiktaktoeGame (playerInput) {
     function retrievePlayerChoice(origin) {
         origin.addEventListener('click', () => {
             let playerChoice = this.target.dataset;
-            addComputerSigns();
             let coordinates=playerChoice.split('');
-            gameBoard[coordinates[0]][coordinates[1]] = 'X';
+            if (gameBoard[coordinates[0]][coordinates[1]] === ''){
+                gameBoard[coordinates[0]][coordinates[1]] = 'X';
+            } else {
+                return alert('Choose a empty cell!')
+            }
+            addComputerSigns();
             turn++;
             return;
         })
