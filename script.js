@@ -29,9 +29,10 @@ function tiktaktoeGame () {
         let strategicAvaible = false;
 
         for (let move of STRATEGICMOVES) {
-            if (gameBoard[move[0]][move[1]] == '');
+            if (gameBoard[move[0]][move[1]] == '') {
             strategicAvaible = true;
             break
+            }
         }
 
         if (strategicAvaible) {
