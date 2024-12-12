@@ -1,18 +1,22 @@
 function tiktaktoeGame () {
+    console.log('Game function initiated!')
     let gameBoard = [
         ['','',''],
         ['','',''],
         ['','',''],
-    ]
-    let turn = 0
+    ];
+    let turn = 0;
+    const RESTARTBUTTON = document.querySelector('#restart')
+    const CELLS = document.querySelectorAll('.cell')
 
     //when indicating the gameboard locations the first number indicates the row, while the second is the column
-
+    //From this point on all helper functions and game logic is declared to be then eventually assembled
     function randomMove() {
         for (x=0;x<3;x++) {
             for (y=0;y<3;y++) {
                 if(gameBoard[x][y] === '') {
                     gameBoard[x][y] = 'O';
+                    console.log('AI random move engaged!')
                 }
             }
         }
@@ -31,6 +35,7 @@ function tiktaktoeGame () {
         for (let move of STRATEGICMOVES) {
             if (gameBoard[move[0]][move[1]] == '') {
             strategicAvaible = true;
+            console.log('strategic moves are avaible');
             break
             }
         }
@@ -39,20 +44,19 @@ function tiktaktoeGame () {
             for(let move of STRATEGICMOVES) {
                 if (gameBoard[move[0]][move[1]] === '') {
                     gameBoard[move[0]][move[1]] = 'O';
-                    turn++;
+                    console.log(`strategic move to ${gameboard[move[0]][move[1]]}`)
                     break
                 }
             }
         } else {
             randomMove();
-            turn++;
             return
         }
     };
 
     function retrievePlayerChoice(origin) {
         origin.addEventListener('click', () => {
-            let playerChoice = this.target.dataset;
+            let playerChoice = this.target.dataset.cell;
             let coordinates=playerChoice.split('');
             if (gameBoard[coordinates[0]][coordinates[1]] === ''){
                 gameBoard[coordinates[0]][coordinates[1]] = 'X';
@@ -61,6 +65,7 @@ function tiktaktoeGame () {
             }
             addComputerSigns();
             turn++;
+            console.log(`advanced to turn ${turn}`)
             return;
         })
     };
@@ -72,8 +77,10 @@ function tiktaktoeGame () {
             for (y=0;y<3;y++) {
                 if (gameBoard[x][y] === 'X') {
                     occupiedCellsPlayer.push([x,y])
+                    console.log(occupiedCellsPlayer)
                 } else if (gameBoard[x][y] === 'O') {
                     occupiedCellsAi.push([x,y])
+                    console.log(occupiedCellsAi)
                 }
             }
         }
@@ -108,4 +115,25 @@ function tiktaktoeGame () {
 
         return false
     }
+
+    //function to reset the game status wherever the restart button is pressed
+    RESTARTBUTTON.addEventListener('click', () => {
+        turn = 0;
+        gameBoard = [
+            ['','',''],
+            ['','',''],
+            ['','',''],
+        ];
+        return alert('Game has been restored to initial settings')
+    })
+
+    //Function encapsulating the entire game logic
+    function startGame() {
+        retrievePlayerChoice(CELLS);
+        winCondition();
+    }
+    startGame()
 };
+
+//initiate tikTakToe game
+tiktaktoeGame()

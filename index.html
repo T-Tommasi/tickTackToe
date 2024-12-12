@@ -10,13 +10,28 @@
 <body>
     <head>
         <div class="container flex">
-            <div class="gameBoard grid"></div>
-            <div class="bottomMenu">
-                <div class="turnCounter"></div>
-                <div class="restartGame">
-                    <button id="restart"></button>
+            <header>The TikTakToe game!</header>
+            <div class="gameBoard grid">
+                <div class="cell" data-cell="00"></div>
+                <div class="cell" data-cell="01"></div>
+                <div class="cell" data-cell="02"></div>
+                <div class="cell" data-cell="10"></div>
+                <div class="cell" data-cell="11"></div>
+                <div class="cell" data-cell="12"></div>
+                <div class="cell" data-cell="20"></div>
+                <div class="cell" data-cell="21"></div>
+                <div class="cell" data-cell="22"></div>
+            </div>
+            <div class="bottomMenu grid">
+                <div class="turnCounter flex flexCentral">
+                    <p>Turn: 0</p>
+                    <p><strong>Make your play!</strong></p>
                 </div>
-                <dialog class="winnerAnnounce"></dialog>
+                <div class="restartGame flex flexCentral">
+                    <button id="restart">Restart the game</button>
+                </div>
+                <dialog class="winnerAnnounce">
+                </dialog>
             </div>
         </div>
     </head>
