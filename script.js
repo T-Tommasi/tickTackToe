@@ -7,6 +7,7 @@ function tiktaktoeGame () {
     ];
     let turn = 0;
     const RESTARTBUTTON = document.querySelector('#restart')
+    const HTMLGAMEBOARD = document.querySelector('.gameBoard')
     const CELLS = document.querySelectorAll('.cell')
 
     //when indicating the gameboard locations the first number indicates the row, while the second is the column
@@ -15,8 +16,13 @@ function tiktaktoeGame () {
         for (x=0;x<3;x++) {
             for (y=0;y<3;y++) {
                 if(gameBoard[x][y] === '') {
-                    gameBoard[x][y] = 'O';
                     console.log('AI random move engaged!')
+                    gameBoard[x][y] = 'O';
+                    let moveCoordinates = x.toString();
+                    moveCoordinates += y.toString();
+                    console.log(moveCoordinates)
+                    appendAiMoves(moveCoordinates,'O')
+                    return
                 }
             }
         }
@@ -37,6 +43,9 @@ function tiktaktoeGame () {
             strategicAvaible = true;
             console.log('strategic moves are avaible');
             break
+            } else {
+                strategicAvaible = false;
+                console.log('strategic moves not available!')
             }
         }
 
@@ -44,7 +53,14 @@ function tiktaktoeGame () {
             for(let move of STRATEGICMOVES) {
                 if (gameBoard[move[0]][move[1]] === '') {
                     gameBoard[move[0]][move[1]] = 'O';
-                    console.log(`strategic move to ${gameboard[move[0]][move[1]]}`)
+                    let moveCoordinates = move[0].toString();
+                    moveCoordinates += move[1].toString();
+                    console.log(moveCoordinates)
+                    appendAiMoves(moveCoordinates,'O')
+                    console.log(`status of the board:`)
+                    console.log(`top row:${gameBoard[0]}`)
+                    console.log(`middle row: ${gameBoard[1]}`)
+                    console.log(`bottom row: ${gameBoard[2]}`)
                     break
                 }
             }
@@ -55,20 +71,37 @@ function tiktaktoeGame () {
     };
 
     function retrievePlayerChoice(origin) {
-        origin.addEventListener('click', () => {
-            let playerChoice = this.target.dataset.cell;
-            let coordinates=playerChoice.split('');
-            if (gameBoard[coordinates[0]][coordinates[1]] === ''){
-                gameBoard[coordinates[0]][coordinates[1]] = 'X';
-            } else {
-                return alert('Choose a empty cell!')
-            }
-            addComputerSigns();
-            turn++;
-            console.log(`advanced to turn ${turn}`)
-            return;
-        })
+        for (let element of origin) {
+            element.addEventListener('click', (cell) => {
+                let playerChoice = cell.target.dataset.cell;
+                let coordinates=playerChoice.split('');
+                if (gameBoard[coordinates[0]][coordinates[1]] === ''){
+                    gameBoard[coordinates[0]][coordinates[1]] = 'X';
+                    appendBoard(element,'X')
+                } else {
+                    return alert('Choose a empty cell!')
+                }
+                addComputerSigns();
+                turn++;
+                console.log(`advanced to turn ${turn}`);
+                winCondition(); // checks if the previous AI and player moves caused someone to win
+                return;
+            })
+        }
     };
+
+    function appendBoard(appendOrigin,sign) {
+        appendOrigin.textContent = sign
+    }
+
+    function appendAiMoves(coordinates, sign) {
+        for (let cell of CELLS) {
+            if (cell.dataset.cell === coordinates) {
+                cell.textContent = sign;
+                break
+            }
+        }
+    }
 
     function findOccupiedCells() {
         let occupiedCellsPlayer = []
@@ -77,10 +110,10 @@ function tiktaktoeGame () {
             for (y=0;y<3;y++) {
                 if (gameBoard[x][y] === 'X') {
                     occupiedCellsPlayer.push([x,y])
-                    console.log(occupiedCellsPlayer)
+                    console.log(`Cells occupied by player: ${occupiedCellsPlayer}`)
                 } else if (gameBoard[x][y] === 'O') {
                     occupiedCellsAi.push([x,y])
-                    console.log(occupiedCellsAi)
+                    console.log(`Cells occupied by AI: ${occupiedCellsAi}`)
                 }
             }
         }
@@ -107,8 +140,10 @@ function tiktaktoeGame () {
             let winningLaneAi = lane.every(coord => aiMoves.some(cell => coord[0] === cell[0] && coord[1] === cell[1]))
 
             if (winningLanePlayer) {
+                console.log('player won!')
                 return playerWin = true
             } else if (winningLaneAi) {
+                console.log('AI won!')
                 return aiWin = true
             }
         }
@@ -124,13 +159,15 @@ function tiktaktoeGame () {
             ['','',''],
             ['','',''],
         ];
-        return alert('Game has been restored to initial settings')
+        for (cell of CELLS) {
+            cell.textContent = ''
+        }
+        console.log('Game has been restored to initial settings')
     })
 
     //Function encapsulating the entire game logic
     function startGame() {
         retrievePlayerChoice(CELLS);
-        winCondition();
     }
     startGame()
 };
