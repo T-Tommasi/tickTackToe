@@ -6,9 +6,12 @@ function tiktaktoeGame () {
         ['','',''],
     ];
     let turn = 0;
-    const RESTARTBUTTON = document.querySelector('#restart')
-    const HTMLGAMEBOARD = document.querySelector('.gameBoard')
-    const CELLS = document.querySelectorAll('.cell')
+    const RESTARTBUTTON = document.querySelector('#restart');
+    const HTMLGAMEBOARD = document.querySelector('.gameBoard');
+    const CELLS = document.querySelectorAll('.cell');
+    const DIALOG = document.querySelector('dialog');
+    const VICTORDIALOGDIV = document.querySelector('#victor');
+    const VICTORYTURN = document.querySelector('#victoryTurn')
 
     //when indicating the gameboard locations the first number indicates the row, while the second is the column
     //From this point on all helper functions and game logic is declared to be then eventually assembled
@@ -134,6 +137,7 @@ function tiktaktoeGame () {
         let occupiedCells=findOccupiedCells()
         let playerMoves = occupiedCells.occupiedCellsPlayer
         let aiMoves = occupiedCells.occupiedCellsAi
+        let victor = null
 
         for (let lane of winningLanes) {
             let winningLanePlayer = lane.every(coord => playerMoves.some(cell => coord[0] === cell[0] && coord[1] === cell[1]))
@@ -141,14 +145,22 @@ function tiktaktoeGame () {
 
             if (winningLanePlayer) {
                 console.log('player won!')
-                return playerWin = true
+
+                return victor = 'player'
             } else if (winningLaneAi) {
                 console.log('AI won!')
-                return aiWin = true
+                return victor = 'AI'
             }
         }
 
         return false
+    }
+
+    function victoryScreen(status) {
+        if (status === 'player') {
+            VICTOR.innerHTML = `<h1>The winner is <strong>${status}</strong>!`;
+            VICTORYTURN.innerHTML = ``
+        }
     }
 
     //function to reset the game status wherever the restart button is pressed
