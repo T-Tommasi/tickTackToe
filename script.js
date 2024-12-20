@@ -146,35 +146,51 @@ function tiktaktoeGame () {
             if (winningLanePlayer) {
                 console.log('player won!')
 
-                return victor = 'player'
+                victor = 'player'
             } else if (winningLaneAi) {
                 console.log('AI won!')
-                return victor = 'AI'
+                victor = 'AI'
             }
         }
 
-        return false
+        if (victor) {
+            victoryScreen(victor);
+            return
+        } else {
+            return false
+        }
     }
 
     function victoryScreen(status) {
-        if (status === 'player') {
-            VICTOR.innerHTML = `<h1>The winner is <strong>${status}</strong>!`;
-            VICTORYTURN.innerHTML = ``
-        }
+        const CLOSEBUTTONLISTENER = document.querySelector('#closeModal')
+        VICTORDIALOGDIV.innerHTML = `<h1>The end!</h1><br><h4>The winner is <strong>${status}</strong></h4>`;
+        VICTORYTURN.innerHTML = `The game finished in ${turn} turns!`
+        DIALOG.showModal(); 
+        CLOSEBUTTONLISTENER.addEventListener('click', () => {
+            restartGame();
+            DIALOG.close();
+        })
+    }
+
+    function restartGame () {
+            turn = 0;
+            gameBoard = [
+                ['','',''],
+                ['','',''],
+                ['','',''],
+            ];
+            for (cell of CELLS) {
+                cell.textContent = ''
+            }
+            console.log('Game has been restored to initial settings')
     }
 
     //function to reset the game status wherever the restart button is pressed
     RESTARTBUTTON.addEventListener('click', () => {
-        turn = 0;
-        gameBoard = [
-            ['','',''],
-            ['','',''],
-            ['','',''],
-        ];
-        for (cell of CELLS) {
-            cell.textContent = ''
-        }
-        console.log('Game has been restored to initial settings')
+        restartGame();
+        console.log('---------')
+        console.log('restarted the game trought button!')
+        console.log('---------')
     })
 
     //Function encapsulating the entire game logic

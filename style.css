@@ -1,5 +1,4 @@
 * {
-    border: solid 1px red;
     box-sizing: border-box;
 }
 
@@ -78,4 +77,16 @@ dialog {
     justify-content: center;
     align-items: center;
     position: relative;
+}
+
+.winnerAnnounce>div {
+    flex-direction: column;
+    gap: 3px;
+    margin: 5%;
+}
+
+.winnerAnnounce button {
+    width: 50%;
+    margin: 15px auto;
+    margin-top: ;
 }
