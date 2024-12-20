@@ -25,7 +25,7 @@
             <div class="bottomMenu grid">
                 <div class="turnCounter flex flexCentral">
                     <p>Turn: 0</p>
-                    <p><strong>Make your play!</strong></p>
+                    <p id="playerNaming"></p>
                 </div>
                 <div class="restartGame flex flexCentral">
                     <button id="restart">Restart the game</button>
@@ -35,6 +35,15 @@
                         <div id="victor"></div>
                         <div id="victoryTurn"></div>
                         <button id="closeModal">Play again!</button>
+                    </div>
+                </dialog>
+                <dialog class="askName">
+                    <div class="flex">
+                        <form action="">
+                            <label for="playerName">Player name: </label>
+                            <input type="text" id="playerName">
+                            <button type="button" id="submitPlayer">Let's start!</button>
+                        </form>
                     </div>
                 </dialog>
             </div>

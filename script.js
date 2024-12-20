@@ -7,11 +7,14 @@ function tiktaktoeGame () {
     ];
     let turn = 0;
     const RESTARTBUTTON = document.querySelector('#restart');
-    const HTMLGAMEBOARD = document.querySelector('.gameBoard');
     const CELLS = document.querySelectorAll('.cell');
-    const DIALOG = document.querySelector('dialog');
+    const DIALOG = document.querySelector('.winnerAnnounce');
     const VICTORDIALOGDIV = document.querySelector('#victor');
-    const VICTORYTURN = document.querySelector('#victoryTurn')
+    const VICTORYTURN = document.querySelector('#victoryTurn');
+    const NAMINGDIALOG = document.querySelector('.askName');
+    const PLAYERENCOURAGEMENT = document.querySelector('#playerNaming');
+    let playerName = null
+    console.log(playerName)
 
     //when indicating the gameboard locations the first number indicates the row, while the second is the column
     //From this point on all helper functions and game logic is declared to be then eventually assembled
@@ -30,6 +33,23 @@ function tiktaktoeGame () {
             }
         }
     };
+
+    function playerNameInsert(nameOfPlayer) {
+        PLAYERENCOURAGEMENT.innerHTML = `Let's do this, ${nameOfPlayer}!`
+    }
+
+    function getPlayerName() {
+        NAMINGDIALOG.showModal();
+        const submitButton = document.querySelector('#submitPlayer');
+        submitButton.addEventListener('click', () => {
+            insertedName = document.querySelector('#playerName').value
+            console.log(insertedName);
+            playerName = insertedName;
+            console.log(playerName);
+            playerNameInsert(playerName);
+            NAMINGDIALOG.close();
+        })
+    }
 
     function addComputerSigns() {
         const STRATEGICMOVES = [
@@ -144,9 +164,9 @@ function tiktaktoeGame () {
             let winningLaneAi = lane.every(coord => aiMoves.some(cell => coord[0] === cell[0] && coord[1] === cell[1]))
 
             if (winningLanePlayer) {
-                console.log('player won!')
+                console.log(`${playerName} won!`)
 
-                victor = 'player'
+                victor = `${playerName}`
             } else if (winningLaneAi) {
                 console.log('AI won!')
                 victor = 'AI'
@@ -195,6 +215,7 @@ function tiktaktoeGame () {
 
     //Function encapsulating the entire game logic
     function startGame() {
+        getPlayerName();
         retrievePlayerChoice(CELLS);
     }
     startGame()
